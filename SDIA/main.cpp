@@ -6,7 +6,7 @@
 int main()
 {
 	table *t = buildtable();
-	for (int i = 0; i < t->n + 1; i++)
-		printf_s("%s %s %d", t->cont[i]->key, t->cont[i]->name, t->cont[i]->amount);
+	for (int i = 0; i < t->n; i++) 
+		printf_s("%s %s %d\n", t->cont[i].key, t->cont[i].name, t->cont[i].amount);
 	getchar();
 }

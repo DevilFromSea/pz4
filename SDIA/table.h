@@ -3,14 +3,14 @@
 
 struct telem
 {
-	char key[8];
-	char name[20];
+	char key[9];
+	char name[21];
 	int amount;
 };
 
 struct table
 {
-	telem *cont[Nmax];
+	telem cont[Nmax];
 	int n = 0;
 };
 

@@ -1,66 +1,59 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <cstdio>
 #include <string.h>
-#define Nmax 15
-
-struct telem
-{
-	char key[8];
-	char name[20];
-	int amount;
-};
-
-struct table
-{
-	telem *cont[Nmax];
-	int n = 0;
-};
+#include "table.h"
 
 bool higher(char *a, char *b)
 {
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		if (a[i] < b[i])
 			return false;
 		if (a[i] > b[i])
 			return true;
 	}
-	return false;
+	return true;
 }
 
-table *add(table *t, telem *e)
+table *add(table *t, telem e)
 {
+	if (!t) 
+	{
+		t = new table;
+		t->cont[0] = e;
+		t->n++;
+		return t;
+	}
 	int i = t->n - 1;
 	if (t->n < Nmax)
 	{
-		while (i >= 0 && higher(t->cont[i]->key, e->key))
+		while (i >= 0 && higher(t->cont[i].key, e.key))
 		{
+			if (!strcmp(t->cont[i].key, e.key))
+			{
+				t->cont[i].amount += e.amount;
+				return t;
+			}
 			t->cont[i + 1] = t->cont[i];
 			i--;
 		}
 		t->cont[i + 1] = e;
 		t->n++;
-		return t;
 	}
-	else
-		return t;
+	return t;
 }
 
 table *buildtable()
 {
-	telem *e;
+	telem e;
 	table *t = NULL;
-	char k[8], n[20];
 	FILE *f;
 	fopen_s(&f, "WORK.txt", "r");
 	while (!feof(f))
 	{
-		for (int i = 0; i < 8; i++)
-			fscanf(f, "%c", e->key);
-		fscanf(f, "%s", &n);
-		for (int j = 0; j < strlen(n); j++)
-			e->name[j] = n[j];
-		fscanf(f, "%d", &e->amount);
+		fscanf(f, "%s", e.key);
+		fscanf(f, "%s", e.name);
+		fscanf(f, "%d", &e.amount);
 		t = add(t, e);
 	}
 	printf_s("Table was successfully built\n");
