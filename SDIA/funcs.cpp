@@ -15,9 +15,48 @@ bool higher(char *a, char *b)
 	return true;
 }
 
+table *ordered()
+{
+	telem e;
+	table *t = NULL;
+	FILE *f;
+	fopen_s(&f, "WORK.txt", "r");
+	while (!feof(f))
+	{
+		fscanf(f, "%s", e.key);
+		fscanf(f, "%s", e.name);
+		fscanf(f, "%d", &e.amount);
+		t = add(t, e);
+	}
+	printf_s("Table was successfully built.\n");
+	return t;
+}
+
+table *disordered()
+{
+	telem e;
+	table *t = NULL;
+	FILE *f;
+	fopen_s(&f, "WORK.txt", "r");
+	while (!feof(f))
+	{
+		fscanf(f, "%s", e.key);
+		fscanf(f, "%s", e.name);
+		fscanf(f, "%d", &e.amount);
+		t = disadd(t, e);
+	}
+	printf_s("Table was successfully built.\n");
+	return t;
+}
+
+table *mixed()
+{
+
+}
+
 table *add(table *t, telem e)
 {
-	if (!t) 
+	if (!t)
 	{
 		t = new table;
 		t->cont[0] = e;
@@ -43,19 +82,30 @@ table *add(table *t, telem e)
 	return t;
 }
 
-table *buildtable()
+table *disadd(table *t, telem e)
 {
-	telem e;
-	table *t = NULL;
-	FILE *f;
-	fopen_s(&f, "WORK.txt", "r");
-	while (!feof(f))
+	if (!t)
 	{
-		fscanf(f, "%s", e.key);
-		fscanf(f, "%s", e.name);
-		fscanf(f, "%d", &e.amount);
-		t = add(t, e);
+		t = new table;
+		t->cont[0] = e;
+		t->n++;
+		return t;
 	}
-	printf_s("Table was successfully built\n");
+	if (t->n < Nmax)
+	{
+		for (int k = 0; k < t->n; k++)
+			if (!strcmp(t->cont[k].key, e.key))
+			{
+				t->cont[k].amount += e.amount;
+				return t;
+			}
+		t->cont[t->n] = e;
+		t->n++;
+	}
 	return t;
+}
+
+table *mixadd(table *t, telem e)
+{
+
 }

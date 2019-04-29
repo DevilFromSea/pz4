@@ -16,6 +16,14 @@ struct table
 
 bool higher(char *a, char *b);
 
-table *add(table *t, telem *e);
+table *ordered();
 
-table *buildtable();
+table *disordered();
+
+table *mixed();
+
+table *add(table *t, telem e);
+
+table *disadd(table *t, telem e);
+
+table *mixadd(table *t, telem e);
