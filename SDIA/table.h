@@ -1,5 +1,15 @@
 #pragma once
-#define Nmax 15
+#define _CRT_SECURE_NO_WARNINGS
+#include <cstdlib>
+#include <string.h>
+#include <stdio.h>
+#include <ctime>
+
+const char alph[] = "abcdefghijklmnopqrstuvwxyz0123456789";
+const int Nmax = 15;
+
+enum Mixcom { MCMD_REPLACE = 1, MCMD_GENERATE };
+enum Commands { CMD_DISORDERED = 1, CMD_ORDERED, CMD_MIXED };
 
 struct telem
 {

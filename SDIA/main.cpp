@@ -1,14 +1,9 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
 #include "table.h"
-#include <string.h>
-
-enum Commands { CMD_DISORDERED = 1, CMD_ORDERED, CMD_MIXED, CMD_EXIT };
 
 int main()
 {
 	int exitFlag = 0, n;
-	table *t;
+	table *t = NULL;
 	while (!exitFlag)
 	{
 		printf("Enter the command number: ");
@@ -22,14 +17,14 @@ int main()
 			printf_s("Building table...\n");
 		case CMD_DISORDERED:
 			t = disordered();
+			exitFlag = 1;
 			break;
 		case CMD_ORDERED:
 			t = ordered();
+			exitFlag = 1;
 			break;
 		case CMD_MIXED:
 			t = mixed();
-			break;
-		case CMD_EXIT:
 			exitFlag = 1;
 			break;
 		default:
@@ -37,5 +32,7 @@ int main()
 			break;
 		}
 	}
-	return 0;
+	for (int i = 0; i < t->n; i++)
+		printf_s("%s	%s	%d\n", t->cont[i].key, t->cont[i].name, t->cont[i].amount);
+	system ("pause");
 }

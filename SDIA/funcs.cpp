@@ -1,6 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
-#include <cstdio>
-#include <string.h>
 #include "table.h"
 
 bool higher(char *a, char *b)
@@ -51,7 +48,19 @@ table *disordered()
 
 table *mixed()
 {
-
+	telem e;
+	table *t = NULL;
+	FILE *f;
+	fopen_s(&f, "WORK.txt", "r");
+	while (!feof(f))
+	{
+		fscanf(f, "%s", e.key);
+		fscanf(f, "%s", e.name);
+		fscanf(f, "%d", &e.amount);
+		t = mixadd(t, e);
+	}
+	printf_s("Table was successfully built.\n");
+	return t;
 }
 
 table *add(table *t, telem e)
@@ -107,5 +116,59 @@ table *disadd(table *t, telem e)
 
 table *mixadd(table *t, telem e)
 {
-
+	if (!t)
+	{
+		t = new table;
+		t->cont[0] = e;
+		t->n++;
+		return t;
+	}
+	if (t->n < Nmax)
+	{
+		for (int k = 0; k < t->n; k++)
+			if (!strcmp(t->cont[k].key, e.key))
+			{
+				if (strcmp(t->cont[k].name, e.name))
+				{
+					int exitFlag = 0, n;
+					printf_s("Added element has the same key as the element %d. What would you like to do with this element?\n"
+						"1. Replace element\n"
+						"2. Generate new key for added element\n", k + 1);
+					while (!exitFlag)
+					{
+						printf_s("Enter the command number: ");
+						if (!scanf_s("%d", &n))
+						{
+							printf_s("Error. Element was skipped.\n");
+							return t;
+						}
+						switch (n)
+						{
+						case MCMD_REPLACE:
+							t->cont[k] = e;
+							exitFlag = 1;
+							break;
+						case MCMD_GENERATE:
+							srand(time(NULL));
+							for (int l = 0; l < 8; l++)
+							{
+								e.key[l] = alph[rand() % 36];
+							}
+							t = mixadd(t, e);
+							exitFlag = 1;
+							break;
+						default:
+							printf_s("Invalid choice.\n");
+							break;
+						}
+					}
+					return t;
+				}
+				t->cont[k].amount += e.amount;
+				return t;
+			}
+		t->cont[t->n] = e;
+		t->n++;
+	}
+	return t;
 }
