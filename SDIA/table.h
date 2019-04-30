@@ -24,13 +24,7 @@ struct table
 	int n = 0;
 };
 
-bool higher(char *a, char *b);
-
-table *ordered();
-
-table *disordered();
-
-table *mixed();
+table *buildtable(int c);
 
 table *add(table *t, telem e);
 

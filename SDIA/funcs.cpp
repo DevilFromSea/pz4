@@ -1,18 +1,6 @@
 #include "table.h"
 
-bool higher(char *a, char *b)
-{
-	for (int i = 0; i < 8; i++)
-	{
-		if (a[i] < b[i])
-			return false;
-		if (a[i] > b[i])
-			return true;
-	}
-	return true;
-}
-
-table *ordered()
+table *buildtable(int c)
 {
 	telem e;
 	table *t = NULL;
@@ -23,41 +11,18 @@ table *ordered()
 		fscanf(f, "%s", e.key);
 		fscanf(f, "%s", e.name);
 		fscanf(f, "%d", &e.amount);
-		t = add(t, e);
-	}
-	printf_s("Table was successfully built.\n");
-	return t;
-}
-
-table *disordered()
-{
-	telem e;
-	table *t = NULL;
-	FILE *f;
-	fopen_s(&f, "WORK.txt", "r");
-	while (!feof(f))
-	{
-		fscanf(f, "%s", e.key);
-		fscanf(f, "%s", e.name);
-		fscanf(f, "%d", &e.amount);
-		t = disadd(t, e);
-	}
-	printf_s("Table was successfully built.\n");
-	return t;
-}
-
-table *mixed()
-{
-	telem e;
-	table *t = NULL;
-	FILE *f;
-	fopen_s(&f, "WORK.txt", "r");
-	while (!feof(f))
-	{
-		fscanf(f, "%s", e.key);
-		fscanf(f, "%s", e.name);
-		fscanf(f, "%d", &e.amount);
-		t = mixadd(t, e);
+		switch (c)
+		{
+		case 1:
+			t = disadd(t, e);
+			break;
+		case 2:
+			t = add(t, e);
+			break;
+		case 3:
+			t = mixadd(t, e);
+			break;
+		}
 	}
 	printf_s("Table was successfully built.\n");
 	return t;
@@ -75,7 +40,7 @@ table *add(table *t, telem e)
 	int i = t->n - 1;
 	if (t->n < Nmax)
 	{
-		while (i >= 0 && higher(t->cont[i].key, e.key))
+		while (i >= 0 && strcmp(t->cont[i].key, e.key) >= 0)
 		{
 			if (!strcmp(t->cont[i].key, e.key))
 			{

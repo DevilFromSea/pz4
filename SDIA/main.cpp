@@ -4,6 +4,10 @@ int main()
 {
 	int exitFlag = 0, n;
 	table *t = NULL;
+	printf_s("Which table would you like to see?\n"
+			"1. Disordered\n"
+			"2. Ordered\n"
+			"3. Mixed\n");
 	while (!exitFlag)
 	{
 		printf("Enter the command number: ");
@@ -16,15 +20,15 @@ int main()
 		{
 			printf_s("Building table...\n");
 		case CMD_DISORDERED:
-			t = disordered();
+			t = buildtable(1);
 			exitFlag = 1;
 			break;
 		case CMD_ORDERED:
-			t = ordered();
+			t = buildtable(2);
 			exitFlag = 1;
 			break;
 		case CMD_MIXED:
-			t = mixed();
+			t = buildtable(3);
 			exitFlag = 1;
 			break;
 		default:
