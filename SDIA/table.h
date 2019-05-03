@@ -2,18 +2,19 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <cstdlib>
 #include <string.h>
+#include <mbstring.h>
 #include <stdio.h>
 #include <ctime>
+#include <windows.h>
 
-const char alph[] = "abcdefghijklmnopqrstuvwxyz0123456789";
-const int Nmax = 15;
+const int Nmax = 10;
+const int Hmax = 65521;
 
-enum Mixcom { MCMD_REPLACE = 1, MCMD_GENERATE };
-enum Commands { CMD_DISORDERED = 1, CMD_ORDERED, CMD_MIXED };
+enum Commands { CMD_DISORDERED = 1, CMD_ORDERED, CMD_HASHTABLE };
 
 struct telem
 {
-	char key[9];
+	UCHAR key[9];
 	char name[21];
 	int amount;
 };
@@ -24,10 +25,17 @@ struct table
 	int n = 0;
 };
 
-table *buildtable(int c);
+struct hashtable
+{
+	telem cont[Hmax];
+};
 
-table *add(table *t, telem e);
+int hashcode(UCHAR key[9]);
 
-table *disadd(table *t, telem e);
+void buildtable(table *t, int c);
 
-table *mixadd(table *t, telem e);
+void add(table *t, telem e);
+
+void disadd(table *t, telem e);
+
+void hashadd(table *t, telem e);

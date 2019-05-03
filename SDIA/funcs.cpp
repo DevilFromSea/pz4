@@ -1,9 +1,21 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include "table.h"
 
-table *buildtable(int c)
+int hashcode(UCHAR key[9])
+{
+	int s = 0, p = 0;
+	for (int i = 8; i > -1; i--)
+	{
+		s += int(key[i]) * 10 ^ p;
+		p++;
+	}
+	return s % Nmax;
+}
+
+void buildtable(table *t, int c)
 {
 	telem e;
-	table *t = NULL;
+	t->n = 0;
 	FILE *f;
 	fopen_s(&f, "WORK.txt", "r");
 	while (!feof(f))
@@ -14,38 +26,30 @@ table *buildtable(int c)
 		switch (c)
 		{
 		case 1:
-			t = disadd(t, e);
+			disadd(t, e);
 			break;
 		case 2:
-			t = add(t, e);
+			add(t, e);
 			break;
 		case 3:
-			t = mixadd(t, e);
+			hashadd(t, e);
 			break;
 		}
 	}
 	printf_s("Table was successfully built.\n");
-	return t;
 }
 
-table *add(table *t, telem e)
+void add(table *t, telem e)
 {
-	if (!t)
-	{
-		t = new table;
-		t->cont[0] = e;
-		t->n++;
-		return t;
-	}
 	int i = t->n - 1;
 	if (t->n < Nmax)
 	{
-		while (i >= 0 && strcmp(t->cont[i].key, e.key) >= 0)
+		while (i >= 0 && _mbscmp(t->cont[i].key, e.key) >= 0)
 		{
-			if (!strcmp(t->cont[i].key, e.key))
+			if (!_mbscmp(t->cont[i].key, e.key))
 			{
 				t->cont[i].amount += e.amount;
-				return t;
+				return;
 			}
 			t->cont[i + 1] = t->cont[i];
 			i--;
@@ -53,87 +57,24 @@ table *add(table *t, telem e)
 		t->cont[i + 1] = e;
 		t->n++;
 	}
-	return t;
 }
 
-table *disadd(table *t, telem e)
+void disadd(table *t, telem e) //νεσο
 {
-	if (!t)
-	{
-		t = new table;
-		t->cont[0] = e;
-		t->n++;
-		return t;
-	}
 	if (t->n < Nmax)
 	{
 		for (int k = 0; k < t->n; k++)
-			if (!strcmp(t->cont[k].key, e.key))
+			if (!_mbscmp(t->cont[k].key, e.key))
 			{
 				t->cont[k].amount += e.amount;
-				return t;
+				return;
 			}
 		t->cont[t->n] = e;
 		t->n++;
 	}
-	return t;
 }
 
-table *mixadd(table *t, telem e)
+void hashadd(table *t, telem e)
 {
-	if (!t)
-	{
-		t = new table;
-		t->cont[0] = e;
-		t->n++;
-		return t;
-	}
-	if (t->n < Nmax)
-	{
-		for (int k = 0; k < t->n; k++)
-			if (!strcmp(t->cont[k].key, e.key))
-			{
-				if (strcmp(t->cont[k].name, e.name))
-				{
-					int exitFlag = 0, n;
-					printf_s("Added element has the same key as the element %d. What would you like to do with this element?\n"
-						"1. Replace element\n"
-						"2. Generate new key for added element\n", k + 1);
-					while (!exitFlag)
-					{
-						printf_s("Enter the command number: ");
-						if (!scanf_s("%d", &n))
-						{
-							printf_s("Error. Element was skipped.\n");
-							return t;
-						}
-						switch (n)
-						{
-						case MCMD_REPLACE:
-							t->cont[k] = e;
-							exitFlag = 1;
-							break;
-						case MCMD_GENERATE:
-							srand(time(NULL));
-							for (int l = 0; l < 8; l++)
-							{
-								e.key[l] = alph[rand() % 36];
-							}
-							t = mixadd(t, e);
-							exitFlag = 1;
-							break;
-						default:
-							printf_s("Invalid choice.\n");
-							break;
-						}
-					}
-					return t;
-				}
-				t->cont[k].amount += e.amount;
-				return t;
-			}
-		t->cont[t->n] = e;
-		t->n++;
-	}
-	return t;
+   
 }

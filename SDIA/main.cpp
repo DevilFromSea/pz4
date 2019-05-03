@@ -3,7 +3,7 @@
 int main()
 {
 	int exitFlag = 0, n;
-	table *t = NULL;
+	table t;
 	printf_s("Which table would you like to see?\n"
 			"1. Disordered\n"
 			"2. Ordered\n"
@@ -20,15 +20,15 @@ int main()
 		{
 			printf_s("Building table...\n");
 		case CMD_DISORDERED:
-			t = buildtable(1);
+			buildtable(&t, 1);
 			exitFlag = 1;
 			break;
 		case CMD_ORDERED:
-			t = buildtable(2);
+			buildtable(&t, 2);
 			exitFlag = 1;
 			break;
-		case CMD_MIXED:
-			t = buildtable(3);
+		case CMD_HASHTABLE:
+			buildtable(&t, 3);
 			exitFlag = 1;
 			break;
 		default:
@@ -36,7 +36,7 @@ int main()
 			break;
 		}
 	}
-	for (int i = 0; i < t->n; i++)
-		printf_s("%s	%s	%d\n", t->cont[i].key, t->cont[i].name, t->cont[i].amount);
+	for (int i = 0; i < t.n; i++)
+		printf_s("%s	%s	%d\n", t.cont[i].key, t.cont[i].name, t.cont[i].amount);
 	system ("pause");
 }
