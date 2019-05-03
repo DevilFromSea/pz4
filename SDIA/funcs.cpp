@@ -3,13 +3,13 @@
 
 int hashcode(UCHAR key[9])
 {
-	int s = 0, p = 0;
+	int s = 0, p = -1;
 	for (int i = 8; i > -1; i--)
 	{
-		s += int(key[i]) * 10 ^ p;
+		s += key[i] * pow(10, p);
 		p++;
 	}
-	return s % Nmax;
+	return s % Hmax;
 }
 
 void buildtable(table *t, int c)
@@ -31,12 +31,35 @@ void buildtable(table *t, int c)
 		case 2:
 			add(t, e);
 			break;
-		case 3:
-			hashadd(t, e);
-			break;
 		}
 	}
+	fclose(f);
 	printf_s("Table was successfully built.\n");
+	for (int i = 0; i < t->n; i++)
+		printf_s("%s	%s	%d\n", t->cont[i].key, t->cont[i].name, t->cont[i].amount);
+}
+
+void buildhtable(htable *t)
+{
+	telem e;
+	for (int k = 0; k < Hmax; k++)
+		t->cont[k].amount = -1;
+	FILE *f;
+	fopen_s(&f, "WORK.txt", "r");
+	while (!feof(f))
+	{
+		fscanf(f, "%s", e.key);
+		fscanf(f, "%s", e.name);
+		fscanf(f, "%d", &e.amount);
+		hashadd(t, e);
+	}
+	fclose(f);
+	printf_s("Table was successfully built.\n");
+	for (int i = 0; i < Hmax; i++)
+	{
+		if (t->cont[i].amount != -1)
+			printf_s("%d	%s	%s	%d\n", i, t->cont[i].key, t->cont[i].name, t->cont[i].amount);
+	}
 }
 
 void add(table *t, telem e)
@@ -59,7 +82,7 @@ void add(table *t, telem e)
 	}
 }
 
-void disadd(table *t, telem e) //νεσο
+void disadd(table *t, telem e)
 {
 	if (t->n < Nmax)
 	{
@@ -74,7 +97,17 @@ void disadd(table *t, telem e) //νεσο
 	}
 }
 
-void hashadd(table *t, telem e)
-{
-   
+void hashadd(htable *t, telem e)
+{	
+	int index = hashcode(e.key);
+	while (t->cont[index].amount != -1)
+	{
+		index++;
+	}
+	if (!_mbscmp(t->cont[index - 1].key, e.key))
+	{
+		t->cont[index - 1].amount += e.amount;
+		return;
+	}
+	t->cont[index] = e;
 }

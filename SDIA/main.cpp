@@ -2,8 +2,9 @@
 
 int main()
 {
-	int exitFlag = 0, n;
 	table t;
+	htable ht;
+	int exitFlag = 0, n;
 	printf_s("Which table would you like to see?\n"
 			"1. Disordered\n"
 			"2. Ordered\n"
@@ -19,7 +20,7 @@ int main()
 		switch (n)
 		{
 			printf_s("Building table...\n");
-		case CMD_DISORDERED:
+		case CMD_DISORDERED:		
 			buildtable(&t, 1);
 			exitFlag = 1;
 			break;
@@ -28,7 +29,7 @@ int main()
 			exitFlag = 1;
 			break;
 		case CMD_HASHTABLE:
-			buildtable(&t, 3);
+			buildhtable(&ht);
 			exitFlag = 1;
 			break;
 		default:
@@ -36,7 +37,5 @@ int main()
 			break;
 		}
 	}
-	for (int i = 0; i < t.n; i++)
-		printf_s("%s	%s	%d\n", t.cont[i].key, t.cont[i].name, t.cont[i].amount);
 	system ("pause");
 }
