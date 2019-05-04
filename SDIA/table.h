@@ -1,10 +1,9 @@
 #pragma once
-#define _CRT_SECURE_NO_WARNINGS
 #include <cstdlib>
 #include <string.h>
 #include <mbstring.h>
+#include <locale.h>
 #include <stdio.h>
-#include <ctime>
 #include <windows.h>
 
 const int Nmax = 10;

@@ -1,7 +1,8 @@
 #include "table.h"
 
 int main()
-{
+{	
+	setlocale(LC_CTYPE, "Russian");
 	table t;
 	htable ht;
 	int exitFlag = 0, n;
@@ -20,7 +21,7 @@ int main()
 		switch (n)
 		{
 			printf_s("Building table...\n");
-		case CMD_DISORDERED:		
+		case CMD_DISORDERED:					
 			buildtable(&t, 1);
 			exitFlag = 1;
 			break;
@@ -28,7 +29,7 @@ int main()
 			buildtable(&t, 2);
 			exitFlag = 1;
 			break;
-		case CMD_HASHTABLE:
+		case CMD_HASHTABLE:			
 			buildhtable(&ht);
 			exitFlag = 1;
 			break;

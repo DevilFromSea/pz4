@@ -1,13 +1,12 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "table.h"
 
 int hashcode(UCHAR key[9])
 {
-	int s = 0, p = -1;
-	for (int i = 8; i > -1; i--)
+	int s = 0, p = 1;
+	for (int i = 7; i > -1; i--)
 	{
-		s += key[i] * pow(10, p);
-		p++;
+		s += key[i] * p;
+		p *= 10;
 	}
 	return s % Hmax;
 }
@@ -20,9 +19,9 @@ void buildtable(table *t, int c)
 	fopen_s(&f, "WORK.txt", "r");
 	while (!feof(f))
 	{
-		fscanf(f, "%s", e.key);
-		fscanf(f, "%s", e.name);
-		fscanf(f, "%d", &e.amount);
+		fscanf_s(f, "%s", e.key, 9);
+		fscanf_s(f, "%s", e.name, 21);
+		fscanf_s(f, "%d", &e.amount);
 		switch (c)
 		{
 		case 1:
@@ -48,9 +47,9 @@ void buildhtable(htable *t)
 	fopen_s(&f, "WORK.txt", "r");
 	while (!feof(f))
 	{
-		fscanf(f, "%s", e.key);
-		fscanf(f, "%s", e.name);
-		fscanf(f, "%d", &e.amount);
+		fscanf_s(f, "%s", e.key, 9);
+		fscanf_s(f, "%s", e.name, 21);
+		fscanf_s(f, "%d", &e.amount);
 		hashadd(t, e);
 	}
 	fclose(f);
@@ -100,10 +99,7 @@ void disadd(table *t, telem e)
 void hashadd(htable *t, telem e)
 {	
 	int index = hashcode(e.key);
-	while (t->cont[index].amount != -1)
-	{
-		index++;
-	}
+	for (index; t->cont[index].amount != -1; index++)
 	if (!_mbscmp(t->cont[index - 1].key, e.key))
 	{
 		t->cont[index - 1].amount += e.amount;
